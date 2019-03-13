@@ -1,0 +1,16 @@
+docker pull ubuntu
+docker pull mongo
+
+cd home/
+Dockerfile
+docker build -t ubuntunew ./
+
+/home/ node index.js
+
+cd /var/lib/mongodb
+touch mongo.log
+mongod --repair
+service mongodb start
+service mongodb status
+#mongo
+mongoimport --db documentos --collection cancerdoc --drop --file /home/dataJson.json --port 8080
