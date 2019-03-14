@@ -1,5 +1,7 @@
 Instrucción proceso de cargue archivo mongo con ubuntu en docker :
+Repsitorio: https://github.com/stephaniaoz/dockerMongo
 
+Descargar los archivos del repositorio: https://github.com/stephaniaoz/dockerMongo/tree/master/ConvertToCsv
 1. Debemos ingresar a la consola de nuestra maquina.
 2. En la consola ingresar como administrador:  sudo -i
 3. Descargamos las imágenes de docker a usar, en este caso ubuntu y mongo:
