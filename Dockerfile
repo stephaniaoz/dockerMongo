@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntudockerfile
 MAINTAINER univalleDocker correo.com
 RUN apt-get -y update; \
     apt-get -y upgrade;
