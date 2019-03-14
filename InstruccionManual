@@ -1,0 +1,71 @@
+Instrucción proceso de cargue archivo mongo con ubuntu en docker :
+
+1. Debemos ingresar a la consola de nuestra maquina.
+2. En la consola ingresar como administrador:  sudo -i
+3. Descargamos las imágenes de docker a usar, en este caso ubuntu y mongo:
+  docker pull ubuntu:14.04 (versión es opcional)
+  docker pull ubuntu
+  docker pull mongo
+  
+4. Creamos un contenedor con la imagen de ubuntu y lo dejamos corriendo:
+  docker run -d -it ubuntu:14.04
+5. Ingresamos a la carpeta donde tengamos los archivos del script que convierte el csv en json:
+  cd /home/ubunntu/Documentos/mongoDocker/
+
+y las cargamos en este caso, una a una al contenedor con ayuda del comando cp:
+
+  mongoDocker# docker cp pruebaCargue.csv aa54b3bbceeb:/home/pruebaCargue.csv
+  mongoDocker# docker cp functions.js aa54b3bbceeb:/home/functions.js
+  mongoDocker# docker cp index.js aa54b3bbceeb:/home/index.js
+
+6. Ingresar al bash del contenedor que creamos de ubuntu:
+  docker attach aa54b3bbceeb
+7. Actualizamos las dependencias:
+  apt-get update
+
+8. Instalamos nodejs y mongodb:
+  apt-get install -y nodejs;
+  apt-get install -y mongodb
+  y actualizamos dependencias: apt-get update
+
+9. Ingresamos al directorio donde quedaron nuestros archivos:
+  cd /home/
+  Ejecutamos el código javascript donde tomamos el archivo de cargue csv y lo convertimos a json con node:
+  node index.js
+  Generará un archivo json -->dataJson.json
+10. Ingresamos a las carpetas de mongo e inicializamos el proceso de mongo:
+  cd /var/lib/mongodb
+  service mongod start
+  service mongod status
+  Ingresamos a la consola de mongo para hacer las consultas para probar que está bien y salimos:
+  #mongo 
+  >show dbs;
+  >exit
+11. Importamos el json generado por el script del punto 9:  
+  # mongoimport --db bd_documentos --collection cancerdoc --drop --file /home/dataJson.json
+12. Realizamos las consultas:
+  #mongo 
+  >show dbs;
+  >exit
+
+En el caso anterior todo se hizo con un container ubuntus, 
+con ese container o los archivos del mismo podriamos generar una imagen propia a
+partir de ese contenedor:
+  docker commit id_contenedor ubuntunuevo
+Y correr el contenedor con esa imagen:
+  docker run -it ubuntunuevo
+O se podría generar los pasos anteriores por medio del 
+Docker file (en el repositorio está) en donde descargamos los archivos directamente
+del repositorio y revisando para qué sirven algunos de los comandos en el achivo:documentacionDockerMongo.docx
+
+FROM ubuntudockerfile
+MAINTAINER univalleDocker correo.com
+RUN apt-get -y update; \
+    apt-get -y upgrade;
+RUN apt-get install -y nodejs;
+RUN apt-get install -y mongodb;
+ADD https://github.com/stephaniaoz/dockerMongo/blob/master/ConvertToCsv/pruebaCargue.csv /home/
+ADD https://github.com/stephaniaoz/dockerMongo/blob/master/ConvertToCsv/index.js /home/
+ADD https://github.com/stephaniaoz/dockerMongo/blob/master/ConvertToCsv/functions.js /home/
+CMD ["bash","-D FOREGROUND"]
+
