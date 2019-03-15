@@ -14,3 +14,64 @@ service mongodb start
 service mongodb status
 #mongo
 mongoimport --db documentos --collection cancerdoc --drop --file /home/dataJson.json --port 8080
+-----------------
+creando imagen:
+
+sudo -i
+
+docker pull ubuntu:14.04
+docker pull ubuntu
+docker pull mongo
+
+docker run -d -it ubuntu:14.04
+
+cd /home/ubunntu/Documentos/mongoDocker/
+mongoDocker# docker cp PruebaCargue.csv aa54b3bbceeb:/home/pruebaCargue.csv
+mongoDocker# docker cp functions.js aa54b3bbceeb:/home/functions.js
+mongoDocker# docker cp index.js aa54b3bbceeb:/home/index.js
+
+docker attach aa54b3bbceeb
+
+[]
+
+docker run -d -it ubuntu
+cd home/ubuntu/Documentos/mongoDocker/
+docker cp pruebaCargue.csv d42f33b760af:/home/
+docker cp functions.js d42f33b760af:/home/functions.js
+docker cp index.js d42f33b760af:/home/index.js
+docker attach d42f33b760af
+apt-get update
+apt-get install -y mongodb
+apt-get update
+cd /var/lib/mongodb
+service mongodb start
+service mongodb status
+#mongo
+>
+apt-get install -y nodejs
+cd home/
+node index.js
+cd /var/lib/mongodb
+mongoimport --db bd_documentos --collection cancerdoc --drop --file /home/dataJson.json 
+
+ps wuax | grep mongo
+kill 493
+rm mongod.lock
+mongod --repair
+
+dejar ejecutando en segundo plano
+mongod &
+
+mongod --fork --logpath /var/log/mongod.log
+mongo
+>exit
+mongoimport --db bd_documentos --collection cancerdoc --drop --file dataJson.json --jsonArray
+
+mongo
+> show dbs
+>use bd_documentos
+>db.bd_documento.count()
+
+--exportar datos:
+mongoexport --db docs --collection cancerdoc --out exprueba.json 
+docker commit d42f33b760af ubmono
